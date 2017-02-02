@@ -45,7 +45,7 @@ while ( $i < 100 ) {
     }
 } //$i < 100
 $ARRAY_sig_to_block = get_signature(); //get the signatures to block
-// echo var_dump($ARRAY_sig_to_block);
+ if ( $DEBUG ) echo var_dump($ARRAY_sig_to_block);
 //init_id
 // $id_events          = 0;//demo
 $id_events          = get_last_event(); // obtiene el ultimo id
@@ -53,7 +53,7 @@ while ( file_exists( $PID_app_file ) ) {
     if ( !file_exists( $PID_reload_file ) ) {
         $ARRAY_sig_to_block = get_signature(); //get the signatures to block 
         touch( $PID_reload_file );
-        echo "Reload Rules";
+        echo "\nReload Rules. Loading ".count($ARRAY_sig_to_block)."\n";
     } //!file_exists( $PID_reload_file )
     // while ( 1==1 ) {
     $SQL = "SELECT  *,inet_ntoa(ip_src) as src ,inet_ntoa(ip_dst) as dst FROM events_with_join  WHERE id > $id_events and timestamp >= DATE_SUB(NOW(),INTERVAL 1 HOUR)  
@@ -65,9 +65,12 @@ while ( file_exists( $PID_app_file ) ) {
     } //!$result = $db->query( $SQL )
     while ( $row = $result->fetch_assoc() ) {
         unset( $key );
-        unset( $msg_TXT );         
+        unset( $msg_TXT );    
+         if ( $DEBUG ) echo "\nSearching for : ".$row[ 'sig_name' ];
+
         $key = array_search_partial( array_column( $ARRAY_sig_to_block, 'sig_name' ), $row[ 'sig_name' ] );
         if ( $key ) {
+              if ( $DEBUG ) echo "\nFounded it with key ".$key;
             // $msg_TXT= "From Suricata:  $row[sig_name] -> $row[sid]:$row[signature] -> event Timestamp: $row[timestamp] ->IP ".$ARRAY_sig_to_block[$key]['src_or_dst']." ntoa : ".$row['ip_'.$ARRAY_sig_to_block[$key]['src_or_dst']]." ". $row[$ARRAY_sig_to_block[$key]['src_or_dst']] . " -> Timeout: ".$ARRAY_sig_to_block[$key]['timeout'];
             $msg_TXT                            = get_text_to_report( $row, $ARRAY_sig_to_block[ $key ] );
             $sql_to_db[ 'que_ip_adr' ]          = $row[ 'ip_' . $ARRAY_sig_to_block[ $key ][ 'src_or_dst' ] ];
@@ -80,6 +83,9 @@ while ( file_exists( $PID_app_file ) ) {
             if ( $DEBUG )
                 echo $msg_TXT . "\n";
         } //$key
+        else {
+             if ( $DEBUG ) echo "NO KEY FOUND \n";
+        }
         $id_events = $row[ 'id' ]; //get the last id
         // mysqli_free_result($result2);
     } //$row = $result->fetch_assoc()
@@ -152,8 +158,10 @@ function get_text_to_report( $row, $ARRAY_sig_to_block ) {
  * @return [type]          [description]
  */
 function array_search_partial( $arr, $keyword ) {
+      
     foreach ( $arr as $index => $string ) {
-        if ( strpos( $string, $keyword ) !== FALSE )
+      
+        if ( strpos( $keyword , $string) !== FALSE )
             return $index;
     } //$arr as $index => $string
 }
