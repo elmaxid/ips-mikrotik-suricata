@@ -15,6 +15,10 @@
  * http://www.mikrotik.com
  * http://wiki.mikrotik.com/wiki/API_PHP_class
  *
+ *
+ *  
+ *  * Inspired on: http://forum.mikrotik.com/viewtopic.php?t=111727
+ *  
  * LICENSE: GPLv2 GNU GENERAL PUBLIC LICENSE
  *
  *
