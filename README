@@ -13,7 +13,7 @@ Instalación:
 
 Una vez que se tiene el Suricata instalado y funcionando en nuestra red, podemos proceder a la instalación de IPS-MikroTik-Suricata:
 
-Disponemos de 3 archivos:
+Disponemos de 5 archivos:
 
 config.php:
 
@@ -41,7 +41,7 @@ Para instalar hay que descargar el archivo y copiarlo al directorio /opt/ips-mik
 
 cd /opt
 
-git clone ips-mikrotik-suricata.git
+git clone https://github.com/elmaxid/ips-mikrotik-suricata.git
 
 cd ips-mikrotik-suricata.git
 
@@ -49,7 +49,7 @@ cd ips-mikrotik-suricata.git
 
 * Configurar archivo config.php  con los datos de la MySQL DB y MikroTik RouterOS API Access
 
-Luego instalat schema DB Mysql
+Luego instalar schema DB Mysql
 
 php -f mikrotik-ips-install.php
 
@@ -57,4 +57,11 @@ php -f mikrotik-ips-install.php
 
 chmod 777 /opt/ips_start.sh 
 
-/opt/./ips_start.sh
+/opt/ips-mikrotik-suricata/./ips_start.sh 
+
+
+----
+
+Funcionamiento:
+
+Para que el Suricata reciba el tráfico del MikroTik RouterOS hay que redirecionar el tráfico, esto se puede realizar con Packet Sniffer o con Mangle Send To TZSP Action.
