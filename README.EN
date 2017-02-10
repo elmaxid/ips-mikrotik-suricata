@@ -1,0 +1,78 @@
+IPS-MikroTik-Suricata is module which connect to Suricata's DB (MySql) using Barnyard2 and Snorby. This module search for custom alerts and when found it, take an IPS action and connect to MikroTik RouterOS via API to add the  Attack's Source IP address and block it (add IP to address list).
+
+Inspired on post from Tom Fisk: http://forum.mikrotik.com/viewtopic.php?t=111727
+
+Requeriment:
+
+* Suricata,Baynyard2 and Snorby running
+* IP and login for router MikroTik RouterOS
+* GIT
+
+** Features
+
+* Detect an Alert from Suricata and connect to RouterOS to block de Attack source IP Address
+* Notification:
+		* Email
+		* Telegram (API Bot)
+
+
+Instalation
+
+Once we have Suricata working and running on our network, the next step is the instalation of IPS-MikroTik-Suricata:
+
+We have 5 main files
+
+config.php:
+
+File with the config of DB and Router's Login
+
+mikrotik-ips-daemon_db.php: 
+
+Daemon which connect to MySql DB and detect the pattern of alerts and save to DB for block it
+
+mikrotik-ips-cron.php:
+
+Daemon which take the alert and connect with MikroTik via API and add the IP address to a list (ip firewall address-list) to block IP
+
+mikrotik-ips-clean.php: 
+
+Daemon to maintance and clean the DB.
+
+
+mikrotik-ips-install.php
+
+File for install and configuration. Create the table with the correct schema and Check the connection via API with MikroTik.
+
+
+--
+To install, Clone the repository and copy to /opt/ips-mikrotik-suricata
+
+cd /opt
+
+git clone https://github.com/elmaxid/ips-mikrotik-suricata.git
+
+cd ips-mikrotik-suricata.git
+
+-- to Config
+
+* Edit the file config.php  with DB and API Logins
+
+Create the DB schema
+
+php -f mikrotik-ips-install.php
+
+* To run, just set the permision 
+
+chmod 777 /opt/ps-mikrotik-suricata.git/ips_start.sh 
+
+* Edit the file ip_start.sh with the correct path and run it
+
+/opt/ips-mikrotik-suricata/./ips_start.sh 
+
+
+----
+
+How work it
+
+For run Suricata, you need to redirect the traffic from MikroTik RouterOS to Suricata server, to do it just use Packet Sniffer or  Mangle Send To TZSP Action.
+
