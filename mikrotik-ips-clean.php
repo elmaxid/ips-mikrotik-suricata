@@ -18,7 +18,7 @@
  *
  * LICENSE: GPLv2 GNU GENERAL PUBLIC LICENSE
  *
- *
+ * v1.1 - 10 Feb 17 - add support telegram, multiple whitelist,
  * v1.0 - 2 Feb 17 - initial version
  ******************************/
 
@@ -27,6 +27,7 @@ $DEBUG = false;
 // $DEBUG=true;
 if ( !$DEBUG )
     error_reporting( 0 );
+require 'functions.php';
 require 'config.php';
 /* Wait for a connection to the database */
 $i = 0;

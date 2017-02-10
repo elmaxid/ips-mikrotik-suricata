@@ -1,11 +1,10 @@
 <?php
 
-
 /*****************************
  *
  * IPS MikroTik Suricata
  *
- * This script install the schema to MYSQL DB
+ * This script is the daemon to clean DB
  * 
  * Author: Maximiliano Dobladez info@mkesolutions.net
  *
@@ -15,15 +14,14 @@
  * http://www.mikrotik.com
  * http://wiki.mikrotik.com/wiki/API_PHP_class
  *
+ * Inspired on: http://forum.mikrotik.com/viewtopic.php?t=111727
  *
- *  
- *  * Inspired on: http://forum.mikrotik.com/viewtopic.php?t=111727
- *  
  * LICENSE: GPLv2 GNU GENERAL PUBLIC LICENSE
  *
- *
+ * v1.1 - 10 Feb 17 - add support telegram, multiple whitelist,
  * v1.0 - 2 Feb 17 - initial version
  ******************************/
+
 
 
 $DEBUG = false;

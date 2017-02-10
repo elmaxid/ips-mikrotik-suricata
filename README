@@ -1,4 +1,4 @@
-IPS-MikroTik-Suricata es una implementación de un módulo que se conecta a la base de datos MySQL del Suricata (utilizando Unified2 y Barnyard2) y busca por alertas predefinidas, en caso de encontrarla toma acción IPS conectándose al MikroTik RouterOS via API para bloquear el IP atacante.
+IPS-MikroTik-Suricata es una implementación de un módulo que se conecta a la base de datos MySQL del Suricata / Snorby(utilizando Unified2 y Barnyard2) y busca por alertas predefinidas, en caso de encontrarla toma acción IPS conectándose al MikroTik RouterOS via API para bloquear el IP atacante.
 
 Inspirado en un post de Tom Fisk del foro de MikroTik: http://forum.mikrotik.com/viewtopic.php?t=111727
 
@@ -8,8 +8,17 @@ Requerimientos:
 
 * Suricata funcionando
 * Baynyard2 para guardar las alertas en MySql
+* Snorby
 * IP y datos de acceso de un MikroTik RouterOS
 * GIT
+
+** Funcionalidades
+
+* Detecta alertas de Suricata y se conecta al RouterOS para bloquear el ataque
+* Notificación de acción:
+		* Correo electrónico
+		* Telegram (API Bot)
+
 
 Instalación:
 
@@ -57,7 +66,9 @@ php -f mikrotik-ips-install.php
 
 * Para ejecutar, setear  los permisos y ejecutar
 
-chmod 777 /opt/ips_start.sh 
+chmod 777 /opt/ps-mikrotik-suricata.git/ips_start.sh 
+
+* Modificar ip_start.sh con los  datos correctos (path)  y ejecutarlo para iniciar el trabajo
 
 /opt/ips-mikrotik-suricata/./ips_start.sh 
 
@@ -66,4 +77,4 @@ chmod 777 /opt/ips_start.sh
 
 Funcionamiento:
 
-Para que el Suricata reciba el tráfico del MikroTik RouterOS hay que redirecionar el tráfico, esto se puede realizar con Packet Sniffer o con Mangle Send To TZSP Action.
+Para que el Suricata reciba el tráfico del MikroTik RouterOS hay que redirecionar el mismo, esto se puede realizar con Packet Sniffer o con Mangle Send To TZSP Action.
