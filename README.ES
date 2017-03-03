@@ -60,7 +60,7 @@ cd /opt
 
 git clone https://github.com/elmaxid/ips-mikrotik-suricata.git
 
-cd ips-mikrotik-suricata.git
+cd ips-mikrotik-suricata
 
 -- para instalar y configurar
 
@@ -76,7 +76,7 @@ php -f mikrotik-ips-install.php
 
 * Para ejecutar, setear  los permisos y ejecutar
 
-chmod 777 /opt/ps-mikrotik-suricata.git/ips_start.sh 
+chmod 777 /opt/ips-mikrotik-suricata/ips_start.sh 
 
 * Modificar ip_start.sh con los  datos correctos (path)  y ejecutarlo para iniciar el trabajo
 
