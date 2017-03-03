@@ -1,10 +1,17 @@
-IPS-MikroTik-Suricata is module which connect to Suricata's DB (MySql) using Barnyard2 and Snorby. This module search for custom alerts and when found it, take an IPS action and connect to MikroTik RouterOS via API to add the  Attack's Source IP address and block it (add IP to address list).
+IPS-MikroTik-Suricata is module which connect to Suricata's DB (MySql) using Barnyard2. This module search for custom alerts and when found it, take an IPS action and connect to MikroTik RouterOS via API to add the  Attack's Source IP address and block it (add IP to address list).
 
 Inspired on post from Tom Fisk: http://forum.mikrotik.com/viewtopic.php?t=111727
 
+Changelog:
+
+3 March 17: v1.3
+
+* The new schema.sql now support trigger to add the alert. So now is depreceated the daemon mikrotik-ips-daemon_db.php
+* Update the instalation file.
+
 Requeriment:
 
-* Suricata,Baynyard2 and Snorby running
+* Suricata,Baynyard2 running
 * IP and login for router MikroTik RouterOS
 * GIT
 
@@ -28,7 +35,7 @@ File with the config of DB and Router's Login
 
 mikrotik-ips-daemon_db.php: 
 
-Daemon which connect to MySql DB and detect the pattern of alerts and save to DB for block it
+Daemon which connect to MySql DB and detect the pattern of alerts and save to DB for block it (DEPRECEATED)
 
 mikrotik-ips-cron.php:
 
@@ -57,7 +64,11 @@ cd ips-mikrotik-suricata.git
 
 * Edit the file config.php  with DB and API Logins
 
-Create the DB schema
+* Create the DB schema 
+
+mysql -u username -p snorby < schema.sql
+
+* To check the DB Connection and API Login:
 
 php -f mikrotik-ips-install.php
 

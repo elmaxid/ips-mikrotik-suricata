@@ -1,58 +1,14 @@
-<?php
-
-/*****************************
- *
- * IPS MikroTik Suricata
- *
- * This script is the daemon to clean DB
- * 
- * Author: Maximiliano Dobladez info@mkesolutions.net
- *
- * http://maxid.com.ar | http://www.mkesolutions.net  
- *
- * for API MIKROTIK:
- * http://www.mikrotik.com
- * http://wiki.mikrotik.com/wiki/API_PHP_class
- *
- * Inspired on: http://forum.mikrotik.com/viewtopic.php?t=111727
- *
- * LICENSE: GPLv2 GNU GENERAL PUBLIC LICENSE
- *
- * v1.2 - 3 March 17 - This script mikrotik-ips-daemon_db.php is depreceated because now we use trigger on DB
- * v1.1 - 10 Feb 17 - add support telegram, multiple whitelist,
- * v1.0 - 2 Feb 17 - initial version
- ******************************/
 
 
-$DEBUG = false;
-// $DEBUG=true;
-if ( !$DEBUG )
-    error_reporting( 0 );
-require( 'share/routeros_api.php' );
-$API = new RouterosAPI();
-require 'config.php';
-/* Wait for a connection to the database */
-$db_ = new mysqli( $server, $user_name, $password, $database );
-if ( $db_->connect_errno > 0 )
-    die( 'Unable to connect to database [' . $db_->connect_error . ']' );
-echo "Connect OK - DB MySQL\n";
-if ( isset( $router[ 'ip' ] ) ) {
-    try {
-        $API->connect( $router[ 'ip' ], $router[ 'user' ], $router[ 'pass' ] );
-    }
-    catch ( Exception $e ) {
-        die( 'Unable to connect to RouterOS. Error:' . $e );
-    }
-    echo "Connect OK - API MikroTik RouterOS\n";
-} //isset( $router[ 'ip' ] )
 
-/*
-$SQL_DB = "              DROP TABLE IF EXISTS `block_queue`;";
-if ( !$result = $db_->query( $SQL_DB ) ) {
-    die( 'There was an error running the query [' . $db_->error . ']' );
-} //!$result = $db_->query( $SQL_DB )
-$SQL_DB = " 
-                    CREATE TABLE `block_queue` (
+
+USE snorby;
+
+SET foreign_key_checks = 0;
+-- DROP TABLE `block_queue`, `sigs_to_block`;
+#  DROP TRIGGER `after_iphdr_insert`;
+#  
+ CREATE TABLE `block_queue` (
                       `que_id` int(11) NOT NULL AUTO_INCREMENT,
                       `que_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the block was added',
                       `que_ip_adr` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'The IP address to block',
@@ -64,26 +20,19 @@ $SQL_DB = "
                       `que_processed` int(11) NOT NULL DEFAULT '0' COMMENT 'If this item has been processed (0=no, <>0=yes)',
                       PRIMARY KEY (`que_id`),
                       KEY `que_added` (`que_added`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Queue of ip addresses to block on firewall';";
-if ( !$result = $db_->query( $SQL_DB ) ) {
-    die( 'There was an error running the query [' . $db_->error . ']' );
-} //!$result = $db_->query( $SQL_DB )
-$SQL_DB = "                     DROP TABLE IF EXISTS `sigs_to_block`;";
-if ( !$result = $db_->query( $SQL_DB ) ) {
-    die( 'There was an error running the query [' . $db_->error . ']' );
-} //!$result = $db_->query( $SQL_DB )
-$SQL_DB = " 
-                    CREATE TABLE `sigs_to_block` (
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Queue of ip addresses to block on firewall';
+
+
+
+   CREATE TABLE `sigs_to_block` (
                       `sig_name` text COLLATE utf8_unicode_ci NOT NULL,
                       `src_or_dst` char(3) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'src',
                       `timeout` varchar(12) COLLATE utf8_unicode_ci NOT NULL DEFAULT '01:00:00',
                       UNIQUE KEY `sig_name_unique_index` (`sig_name`(64))
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-if ( !$result = $db_->query( $SQL_DB ) ) {
-    die( 'There was an error running the query [' . $db_->error . ']' );
-} //!$result = $db_->query( $SQL_DB )
-$SQL_DB = " 
-                    INSERT INTO `sigs_to_block` (`sig_name`, `src_or_dst`, `timeout`) VALUES
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+    INSERT INTO `sigs_to_block` (`sig_name`, `src_or_dst`, `timeout`) VALUES
                     ('ET COMPROMISED Known Compromised or Hostile Host Traffic',    'src',  '01:00:00'),
                     ('ET POLICY Suspicious inbound to', 'src',  '01:00:00'),
                     ('ET DROP Dshield Block Listed Source', 'src',  '01:00:00'),
@@ -103,19 +52,9 @@ $SQL_DB = "
                     ('ET POLICY Suspicious inbound to mySQL port 3306', 'src',  '00:10:00'),
                     ('ET SCAN Behavioral Unusually fast Terminal Server Traffic, Potential Scan or Infection (Inbound)',    'src',  '00:10:00'),
                     ('ET DOS Possible NTP DDoS Inbound Frequent',   'src',  '00:10:00'),
-                    ('ET SCAN SipCLI VOIP Scan',    'src',  '01:00:00'); ";
+                    ('ET SCAN SipCLI VOIP Scan',    'src',  '01:00:00');
 
 
-
-if ( !$result = $db_->query( $SQL_DB ) ) {
-    die( 'There was an error running the query [' . $db_->error . ']' );
-} //!$result = $db_->query( $SQL_DB )
-echo "Create Schema MySQL OK \n";
-
-
-
-   $SQL_DB = ' 
-                    DROP TRIGGER `after_iphdr_insert`;
                       DELIMITER ;;
                       CREATE TRIGGER `after_iphdr_insert` AFTER INSERT ON `iphdr` FOR EACH ROW
                       BEGIN
@@ -162,15 +101,5 @@ echo "Create Schema MySQL OK \n";
                           END IF;
                         END IF;
                       END;;
-                      DELIMITER ;';
-                 
+                      DELIMITER ;
 
-if ( !$result = $db_->query( $SQL_DB ) ) {
-    die( 'There was an error running the query [' . $db_->error . ']' );
-} //!$result = $db_->query( $SQL_DB )
-echo "Create Trigget Schema MySQL OK \n";
-*/
-
-$db_->close();
-$API->disconnect();
-?>

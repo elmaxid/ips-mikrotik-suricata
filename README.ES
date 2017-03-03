@@ -1,14 +1,20 @@
-IPS-MikroTik-Suricata es una implementación de un módulo que se conecta a la base de datos MySQL del Suricata / Snorby(utilizando Unified2 y Barnyard2) y busca por alertas predefinidas, en caso de encontrarla toma acción IPS conectándose al MikroTik RouterOS via API para bloquear el IP atacante.
+IPS-MikroTik-Suricata es una implementación de un módulo que se conecta a la base de datos MySQL del Suricata (utilizando Unified2 y Barnyard2) y busca por alertas predefinidas, en caso de encontrarla toma acción IPS conectándose al MikroTik RouterOS via API para bloquear el IP atacante.
 
 Inspirado en un post de Tom Fisk del foro de MikroTik: http://forum.mikrotik.com/viewtopic.php?t=111727
 
 Mirar la wiki para ver documentación: https://github.com/elmaxid/ips-mikrotik-suricata/wiki/Instalaci%C3%B3n-y-Uso
 
+Lista de Cambios:
+
+3 Marzo 17: v1.3
+
+* Se hizo el schema de la DB con trigger, ahora no es necesario el Demonio mikrotik-ips-daemon_db.php
+* Se actualizo la instalación
+
 Requerimientos:
 
 * Suricata funcionando
 * Baynyard2 para guardar las alertas en MySql
-* Snorby
 * IP y datos de acceso de un MikroTik RouterOS
 * GIT
 
@@ -61,6 +67,10 @@ cd ips-mikrotik-suricata.git
 * Configurar archivo config.php  con los datos de la MySQL DB y MikroTik RouterOS API Access
 
 Luego instalar schema DB Mysql
+
+mysql -u username -p snorby < schema.sql
+
+* Para chequear la configuración o Conexión con API ejecutar:
 
 php -f mikrotik-ips-install.php
 

@@ -18,6 +18,7 @@
  *
  * LICENSE: GPLv2 GNU GENERAL PUBLIC LICENSE
  *
+ * v1.2 - 3 March 17 - This script mikrotik-ips-daemon_db.php is depreceated because now we use trigger on DB
  * v1.1 - 10 Feb 17 - add support telegram, multiple whitelist,
  * v1.0 - 2 Feb 17 - initial version
  ******************************/
