@@ -2,6 +2,10 @@ IPS-MikroTik-Suricata is module which connect to Suricata's DB (MySql) using Bar
 
 Inspired on post from Tom Fisk: http://forum.mikrotik.com/viewtopic.php?t=111727
 
+# New Version
+Suricata2MikroTik eve.json version: https://github.com/elmaxid/Suricata2MikroTik
+
+
 Changelog:
 
 3 March 17: v1.3
